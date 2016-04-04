@@ -28,9 +28,6 @@ namespace PalomiesPeli
         private int direction = 1;
         private int frameHeight = 70;
         // speed
-        private readonly double MaxSpeed = 10.0;
-        private readonly double Accelerate = 0.5;
-        private double speed;
         private readonly double Step = 5;
         public Palomies()
         {
@@ -76,12 +73,23 @@ namespace PalomiesPeli
         }
         public void Move(int direction)
         {
+             
             LocationX = LocationX + Step * direction;
             SetValue(Canvas.LeftProperty, LocationX);
             Animate();
-            //more speed
-            //speed += Accelerate;
-            //if (speed > MaxSpeed) speed = MaxSpeed; // max 10
+            
+            if (LocationX > 500)
+            {
+                LocationX = 500;
+                SetValue(Canvas.LeftProperty, LocationX);
+                Animate();
+            }
+            if (LocationX < 0)
+                {
+                    LocationX = 0;
+                    SetValue(Canvas.LeftProperty, LocationX);
+                    Animate();
+                }
         }
     }
 }

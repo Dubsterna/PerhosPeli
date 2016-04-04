@@ -30,11 +30,11 @@ namespace PalomiesPeli
         // game loop timer
         private DispatcherTimer timer;
         // which keys are pressed
-        
+
         private bool RightPressed;
         private bool LeftPressed;
 
-
+        public fallingObject FallingObject;
         public MainPage()
         {
             this.InitializeComponent();
@@ -48,6 +48,7 @@ namespace PalomiesPeli
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
             Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
 
+            CreateFallingObject();
             CreatePalomies();
             StartGame();
         }
@@ -89,12 +90,24 @@ namespace PalomiesPeli
             palomies = new Palomies
             {
                 LocationX = MyCanvas.Width / 2 - 75,
-                LocationY = MyCanvas.Height / 2 - 66
+                LocationY = 575
             };
             // add to canvas
             MyCanvas.Children.Add(palomies);
             // show in right location
             palomies.SetLocation();
+        }
+        private void CreateFallingObject()
+        {
+            FallingObject = new fallingObject
+            {
+                LocationX = MyCanvas.Width / 2 - 75,
+                LocationY = MyCanvas.Height / 2 - 66
+            };
+            // add to canvas
+            MyCanvas.Children.Add(FallingObject);
+            // show in right location
+
         }
         private void StartGame()
         {
@@ -111,6 +124,30 @@ namespace PalomiesPeli
             if (RightPressed) palomies.Move(1);
             // update palomies location
             palomies.SetLocation();
+
+            CheckCollision();
+
+        }
+
+        // check collision with flowers and butterfly
+        private void CheckCollision()
+        {
+
+
+            // get rects
+            Rect r1 = new Rect(palomies.LocationX, palomies.LocationY, palomies.ActualWidth, palomies.ActualHeight); // palomies
+            Rect r2 = new Rect(FallingObject.LocationX, FallingObject.LocationY, FallingObject.ActualWidth, FallingObject.ActualHeight); // loota
+                                                                                                                                         // does intersects happen
+            r1.Intersect(r2);
+            // if not empty
+            if (!r1.IsEmpty)
+            {
+                // remove flower
+                MyCanvas.Children.Remove(FallingObject);
+                CreateFallingObject();
+                // end looping...
+
+            }
         }
     }
 }
